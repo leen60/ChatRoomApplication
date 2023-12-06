@@ -1,0 +1,128 @@
+openapi: 3.0.3
+info:
+  title: Entrance task
+  description: Entrance task
+  version: 1.0.0
+paths:
+  /api/admin/deleteUser/{id}:
+    delete:
+      summary: "DELETE api/admin/deleteUser/{id}"
+      operationId: "deleteUserFromChatRoom"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/admin/addUser:
+    post:
+      summary: "POST api/admin/addUser"
+      operationId: "newUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "string"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/admin/stats/{id}:
+    get:
+      summary: "GET api/admin/stats/{id}"
+      operationId: "stats"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/user/users:
+    get:
+      summary: "GET api/user/users"
+      operationId: "all"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/user/getMessages:
+    get:
+      summary: "GET api/user/getMessages"
+      operationId: "getmessages"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/user/writeMessage/{id}:
+    post:
+      summary: "POST api/user/writeMessage/{id}"
+      operationId: "postMessage"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "string"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/user/newToOld:
+    get:
+      summary: "GET api/user/newToOld"
+      operationId: "sortMessagesNewestToOldest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+
+  /api/user/oldToNew:
+    get:
+      summary: "GET api/user/oldToNew"
+      operationId: "sortMessagesOldestToNewest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
