@@ -9,14 +9,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface UserRepository extends Repository<User, UUID> {
+public interface UserRepository extends Repository<User, Integer> {
 
-    User save(User user);
+    Optional<User> save(User user);
     @Query(value = "SELECT * FROM USR WHERE ID = ?1", nativeQuery = true)
-    Optional<User> findById(UUID id);
+    Optional<User> findById(int id);
+    @Query(value = "SELECT * FROM USR WHERE Name = ?1", nativeQuery = true)
+    Optional<User> findByName(String name);
     @Modifying
     @Query(value = "DELETE FROM USR WHERE ID = ?1", nativeQuery = true)
-    void deleteById(UUID id);
+    Optional<Integer> deleteById(int id);
     @Query(value = "SELECT * FROM USR", nativeQuery = true)
     Optional<List<User>> findAll();
 }

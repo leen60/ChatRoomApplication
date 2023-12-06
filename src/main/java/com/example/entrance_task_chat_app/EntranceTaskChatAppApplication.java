@@ -1,9 +1,7 @@
 package com.example.entrance_task_chat_app;
 
-import com.example.entrance_task_chat_app.entity.Admin;
 import com.example.entrance_task_chat_app.entity.Chat;
 import com.example.entrance_task_chat_app.entity.User;
-import com.example.entrance_task_chat_app.repository.AdminRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -14,7 +12,6 @@ import com.example.entrance_task_chat_app.repository.UserRepository;
 import com.example.entrance_task_chat_app.repository.ChatRepository;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @SpringBootApplication
 public class EntranceTaskChatAppApplication {
@@ -22,17 +19,27 @@ public class EntranceTaskChatAppApplication {
     public static void main(String[] args) {
         SpringApplication.run(EntranceTaskChatAppApplication.class, args);
     }
+
     private static final Logger log = LoggerFactory.getLogger(EntranceTaskChatAppApplication.class);
-
-
         @Bean
-        CommandLineRunner runner(UserRepository userRepository, AdminRepository adminRepository, ChatRepository chatRepository) {
+        CommandLineRunner runner(UserRepository userRepository, ChatRepository chatRepository) {
         return args -> {
-            log.info("Preloading " + adminRepository.save(new Admin(12, "Bilbo Baggins", "burglar", Instant.now().toEpochMilli(), Instant.now().toEpochMilli())));
-            log.info("Preloading " + userRepository.save(new User(UUID.randomUUID(), "Bilbo Baggins", "burglar", Instant.now().toEpochMilli(), Instant.now().toEpochMilli())));
+            User anonymous = new User();
+            anonymous.setId(1);
+            anonymous.setName("anonymous");
+            anonymous.setCreatedAt(Instant.now().toEpochMilli());
+            log.info("Preloading " + userRepository.save(anonymous));
 
-            User user = new User(UUID.randomUUID(), "Message user", "burglar", Instant.now().toEpochMilli(), Instant.now().toEpochMilli());
-            User saved = userRepository.save(user);
+            User user1 = new User();
+            user1.setName("Timmy");
+            user1.setCreatedAt(Instant.now().toEpochMilli());
+            log.info("Preloading " + userRepository.save(user1));
+
+            User user = new User();
+            user.setName("Jimmy");
+            user.setCreatedAt(Instant.now().toEpochMilli());
+            User saved = userRepository.save(user).orElseThrow();
+
             Chat message = new Chat();
             message.setSender(saved);
             message.setBody("This is the first message");

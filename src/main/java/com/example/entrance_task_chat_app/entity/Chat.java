@@ -15,10 +15,10 @@ import java.util.UUID;
 @Table(name = "chat_room")
 public class Chat {
     @Id
-    @UuidGenerator
-    private UUID id;
-    @OneToOne
-    @JoinColumn(name = "sender_id", nullable=false, unique=false)
+    @GeneratedValue
+    private int id;
+    @ManyToOne
+    @JoinColumn(name = "sender", nullable=false, unique=false)
     private User sender;
     @Column(name="body", length=255, nullable=false, unique=false)
     private String body;

@@ -2,51 +2,72 @@ package com.example.entrance_task_chat_app.controller;
 
 import com.example.entrance_task_chat_app.entity.Chat;
 import com.example.entrance_task_chat_app.entity.User;
-import com.example.entrance_task_chat_app.repository.ChatRepository;
-import com.example.entrance_task_chat_app.repository.UserRepository;
+import com.example.entrance_task_chat_app.projection.UserView;
+import com.example.entrance_task_chat_app.service.UserManagementService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("api/user")
 public class UserController {
-    private final UserRepository userRepository;
-    private final ChatRepository chatRepository;
+    private final UserManagementService userManagementService;
 
-    public UserController(UserRepository userRepository, ChatRepository chatRepository) {
-        this.userRepository = userRepository;
-        this.chatRepository = chatRepository;
+    public UserController(UserManagementService userManagementService) {
+        this.userManagementService = userManagementService;
     }
 
     @GetMapping("/users")
-    Iterable<User> all() {
-        return userRepository.findAll().orElseThrow();
+    ResponseEntity<?> all() {
+        Iterable<User> users;
+        try {
+            users = userManagementService.manageUserRetrieval();
+        } catch (Exception notFound) {
+            return new ResponseEntity<>(notFound.getMessage(), HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+    @GetMapping("/getMessages")
+    ResponseEntity<?> getmessages() {
+        Iterable<UserView> userView;
+        try {
+            userView = userManagementService.manageChatRoomRetrieval();
+        } catch (Exception notFound) {
+            return new ResponseEntity<>(notFound.getMessage(), HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(userView, HttpStatus.OK);
     }
 
-    @GetMapping("/getUser/{id}")
-    public User getUserById(@PathVariable UUID id) {
-        return userRepository.findById(id).orElseThrow();
+    @PostMapping("/writeMessage/{id}")
+    ResponseEntity<?> postMessage(@RequestBody String text, @PathVariable int id) {
+        Chat chat;
+        try {
+            chat = userManagementService.manageMessageWriting(text, id);
+        } catch (Exception messageNotWritten) {
+            return new ResponseEntity<>(messageNotWritten.getMessage(), HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(chat, HttpStatus.OK);
+    }
+    @GetMapping("/newToOld")
+    ResponseEntity<?> sortMessagesNewestToOldest() {
+        Iterable<Chat> chatRoom;
+        try {
+            chatRoom = userManagementService.manageNewestToOldest();
+        } catch (Exception notFound) {
+            return new ResponseEntity<>(notFound.getMessage(), HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(chatRoom, HttpStatus.OK);
     }
 
-    @DeleteMapping("/deleteUser/{id}")
-    public Boolean deleteUserFromChatRoom(@PathVariable UUID id) {
-        userRepository.deleteById(id);
-        return true;
+    @GetMapping("/oldToNew")
+    ResponseEntity<?> sortMessagesOldestToNewest() {
+        Iterable<Chat> chatRoom;
+        try {
+            chatRoom = userManagementService.manageOldestToNewest();
+        } catch (Exception notFound) {
+            return new ResponseEntity<>(notFound.getMessage(), HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(chatRoom, HttpStatus.OK);
     }
 
-    @PostMapping("/addUser")
-    User newUser(@RequestBody User user) {
-        return userRepository.save(user);
-    }
-
-    @GetMapping("/chatRoom")
-    Iterable<Chat> chatRoom() {
-        return chatRepository.findAll().orElseThrow();
-    }
-
-    @PostMapping("/addMessage")
-    Chat newMessage(@RequestBody Chat chat) {
-        return chatRepository.save(chat);
-    }
 }
