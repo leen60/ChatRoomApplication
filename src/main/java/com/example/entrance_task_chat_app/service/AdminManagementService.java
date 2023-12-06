@@ -22,13 +22,11 @@ public class AdminManagementService {
 
     public User manageUserCreation(String name) throws Exception {
         if(!userRepository.findByName(name).equals(Optional.empty())) {
-            System.out.println("NAME TAKEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN");
             throw new Exception("Name taken - " + name);
         } else {
             User newUser = new User();
             newUser.setName(name);
             newUser.setCreatedAt(Instant.now().toEpochMilli());
-            System.out.println("FAILLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
             return userRepository.save(newUser).orElseThrow( () -> new Exception("Save failed"));
         }
     }
