@@ -21,9 +21,9 @@ public class AdminController {
         try {
             adminManagementService.manageUserDeletion(id);
         } catch (Exception notFound) {
-            return new ResponseEntity<>(notFound.getMessage(), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(notFound.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
-        return new ResponseEntity<>("Deleted successfully, all messages will be marked as from anonymous sender", HttpStatus.OK);
+        return new ResponseEntity<>("Deleted successfully, all messages will be marked as from anonymous sender", HttpStatus.ACCEPTED);
     }
     @PostMapping("/addUser")
     ResponseEntity<?> newUser(@RequestBody String name) {
@@ -33,7 +33,7 @@ public class AdminController {
         } catch (Exception notFound) {
             return new ResponseEntity<>(notFound.getMessage(), HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
     @GetMapping("/stats/{id}")

@@ -114,7 +114,6 @@ paths:
             '*/*':
               schema:
                 type: "object"
-
   /api/user/oldToNew:
     get:
       summary: "GET api/user/oldToNew"

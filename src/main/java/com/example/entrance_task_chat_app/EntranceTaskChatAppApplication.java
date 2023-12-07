@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import com.example.entrance_task_chat_app.repository.UserRepository;
 import com.example.entrance_task_chat_app.repository.ChatRepository;
+import org.springframework.context.annotation.Profile;
 
 import java.time.Instant;
 
@@ -21,6 +22,7 @@ public class EntranceTaskChatAppApplication {
     }
 
     private static final Logger log = LoggerFactory.getLogger(EntranceTaskChatAppApplication.class);
+        @Profile("!test")
         @Bean
         CommandLineRunner runner(UserRepository userRepository, ChatRepository chatRepository) {
         return args -> {
